@@ -1,31 +1,73 @@
-# Digit-Recognizer
-The goal in this competition is to take an image of a handwritten single digit, and determine what that digit is. For every in the test set, you should predict the correct label.
+# Digit Recognizer - Neural Network from Scratch
 
-The data files train.csv and test.csv contain gray-scale images of hand-drawn digits, from zero through nine.
+A neural network implementation from scratch using NumPy for the [Kaggle Digit Recognizer competition](https://www.kaggle.com/c/digit-recognizer/overview).
 
-Each image is 28 pixels in height and 28 pixels in width, for a total of 784 pixels in total. Each pixel has a single pixel-value associated with it, indicating the lightness or darkness of that pixel, with higher numbers meaning darker. This pixel-value is an integer between 0 and 255, inclusive.
+## Overview
 
-The training data set, (train.csv), has 785 columns. The first column, called "label", is the digit that was drawn by the user. The rest of the columns contain the pixel-values of the associated image.
+This project implements a 2-layer neural network to classify handwritten digits (0-9) from the MNIST dataset without using any deep learning frameworks like TensorFlow or PyTorch.
 
-Each pixel column in the training set has a name like pixelx, where x is an integer between 0 and 783, inclusive. To locate this pixel on the image, suppose that we have decomposed x as x = i * 28 + j, where i and j are integers between 0 and 27, inclusive. Then pixelx is located on row i and column j of a 28 x 28 matrix, (indexing by zero).
+## Model Architecture
 
-For example, pixel31 indicates the pixel that is in the fourth column from the left, and the second row from the top, as in the ascii-diagram below.
+- **Input Layer**: 784 neurons (28×28 pixel images flattened)
+- **Hidden Layer**: 10 neurons with ReLU activation
+- **Output Layer**: 10 neurons with Softmax activation (one for each digit class)
 
-Visually, if we omit the "pixel" prefix, the pixels make up the image like this:
+## Key Features
 
-000 001 002 003 ... 026 027
-028 029 030 031 ... 054 055
-056 057 058 059 ... 082 083
- |   |   |   |  ...  |   |
-728 729 730 731 ... 754 755
-756 757 758 759 ... 782 783 
-The test data set, (test.csv), is the same as the training set, except that it does not contain the "label" column.
+- **Pure NumPy Implementation**: Built from scratch using only NumPy for matrix operations
+- **Forward Propagation**: ReLU activation for hidden layer, Softmax for output
+- **Backpropagation**: Custom gradient computation and parameter updates
+- **Data Preprocessing**: Pixel normalization (0-255 → 0-1) for faster convergence
 
-Your submission file should be in the following format: For each of the 28000 images in the test set, output a single line containing the ImageId and the digit you predict. For example, if you predict that the first image is of a 3, the second image is of a 7, and the third image is of a 8, then your submission file would look like:
+## Results
 
-ImageId,Label
-1,3
-2,7
-3,8 
-(27997 more lines)
-The evaluation metric for this contest is the categorization accuracy, or the proportion of test images that are correctly classified. For example, a categorization accuracy of 0.97 indicates that you have correctly classified all but 3% of the images.
+- **Training Accuracy**: ~84.7% after 500 iterations
+- **Learning Rate**: 0.10
+- **Training Time**: Fast convergence with clear accuracy improvement over iterations
+
+## Code Structure
+
+```python
+# Core Functions
+- init_params()      # Initialize weights and biases
+- forward_prop()     # Forward pass through network
+- backward_prop()    # Compute gradients via backpropagation
+- update_params()    # Update weights using gradient descent
+- gradient_descent() # Main training loop
+```
+
+## Usage
+
+```python
+# Train the model
+W1, b1, W2, b2 = gradient_descent(X_train, Y_train, 0.10, 500)
+
+# Make predictions
+predictions = make_predictions(X_test, W1, b1, W2, b2)
+
+# Test individual samples
+test_prediction(index, W1, b1, W2, b2)
+```
+
+## Dataset
+
+- **Training Set**: 42,000 labeled images
+- **Test Set**: 28,000 unlabeled images for submission
+- **Validation Set**: 1,000 samples held out from training data
+
+## Dependencies
+
+```python
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+```
+
+## Implementation Highlights
+
+- **One-Hot Encoding**: Converts labels to categorical format for multi-class classification
+- **Vectorized Operations**: Efficient matrix computations for batch processing
+- **Learning Visualization**: Real-time accuracy tracking during training
+- **Prediction Testing**: Visual verification of model predictions with matplotlib
+
+This implementation demonstrates fundamental deep learning concepts including gradient descent, backpropagation, and neural network architecture design using only basic mathematical operations.
